@@ -2,7 +2,7 @@ require_relative 'scores'
 
 class ScorerLogParser
   require 'time'
-  def parse_from_csv(csvlines)
+  def parse(csvlines)
     scores = Scores.new 
     csvlines.each { |line|
       score_s, time_s = line.split ','

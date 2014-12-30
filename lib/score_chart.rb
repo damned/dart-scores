@@ -3,20 +3,29 @@ class ScoreChart
     @buckets = buckets
   end
 
-  def render(bucket_width: 3)
-    chart = []
-    chart << values.map {|v| ('O' * v).ljust(bucket_width, ' ').reverse }.join('')
-    chart << keys.map(&:first).join(' ').ljust(bucket_width, ' ')
-    chart.join("\n")
+  def render(width: 3)
+    lines = []
+    remaining = @buckets.dup
+    keys = @buckets.keys
+    
+    lines << keyline(keys, width)
+
+    while remaining.values.inject(:+) > 0 do
+      lines << remaining.map {|k, v| 
+        line_v = [v, width].min
+        remaining[k] = v - line_v
+        ('O' * line_v).rjust(width, ' ')
+      }.join('')
+    end
+    lines.reverse.join("\n")
   end
 
   private
 
-  attr_reader :buckets
-  def keys
-    buckets.keys
+  def keyline(keys, width)
+    keys.map {|key|
+      key.first.to_s.ljust(width, ' ')
+    }.join ''
   end
-  def values
-    buckets.values
-  end
+
 end
