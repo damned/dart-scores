@@ -11,6 +11,17 @@ describe ScoreChart do
                                                '0 ')
   end
 
+  it 'should stack scores away from lower scores' do
+    scores = {
+      0..1 => 1, 2..3 => 4, 4..5 => 3, 6..7 => 1
+    }
+    chart = ScoreChart.new scores
+
+    expect(chart.render(width: 2)).to eq chart('  OOO   ',
+                                               ' OOOOOO ',
+                                               '0 2 4 6 ')
+  end
+
   it 'should render scores from multiple buckets' do
     scores = {
       0..1 => 2,
@@ -18,7 +29,7 @@ describe ScoreChart do
     }
     chart = ScoreChart.new scores
 
-    expect(chart.render(width: 2)).to eq chart('OO O',
+    expect(chart.render(width: 2)).to eq chart('OOO ',
                                                '0 2 ')
   end
 
@@ -30,7 +41,7 @@ describe ScoreChart do
     chart = ScoreChart.new scores
 
     expect(chart.render(width: 2)).to eq chart(' O  ',
-                                               'OO O',
+                                               'OOO ',
                                                '0 2 ')
   end
 
@@ -38,7 +49,7 @@ describe ScoreChart do
     chart = ScoreChart.new(0..1 => 3,
                            2..3 => 5)
 
-    expect(chart.render(width: 4)).to eq chart('       O',
+    expect(chart.render(width: 4)).to eq chart('    O   ',
                                                ' OOOOOOO',
                                                '0   2   ')
   end

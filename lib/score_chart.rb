@@ -17,7 +17,9 @@ class ScoreChart
       lines << remaining.map {|k, v| 
         line_v = [v, width].min
         remaining[k] = v - line_v
-        ('O' * line_v).rjust(width, ' ')
+        line = ('O' * line_v).ljust(width, ' ')
+        line.reverse! if to_the_right?(k)
+        line
       }.join('')
     end
     lines.reverse.join("\n")
@@ -43,4 +45,11 @@ class ScoreChart
     }
   end
 
+  def to_the_right?(key)
+    keys = @buckets.keys
+    key_index = keys.index(key)
+    to_left = (key_index > 0) ? @buckets[keys[key_index - 1]] : 0
+    to_right = (key_index < keys.size - 1) ? @buckets[keys[key_index + 1]] : 0
+    to_right >= to_left
+  end
 end
