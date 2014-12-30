@@ -1,9 +1,11 @@
+require 'colorize'
+
 class ScoreChart
   def initialize(buckets)
     @buckets = buckets
   end
 
-  def render(width: 3, with_empties: false)
+  def render(width: 3, with_empties: false, colored: false)
     lines = []
 
     remaining = @buckets.dup
@@ -13,19 +15,28 @@ class ScoreChart
     
     lines << keyline(keys, width)
 
+    line_no = 0
+
     while remaining.values.inject(:+) > 0 do
       lines << remaining.map {|k, v| 
+        rawci = ((line_no / width) + (k.first / k.size)) 
+        color = colors[rawci % colors.size]
         line_v = [v, width].min
         remaining[k] = v - line_v
         line = ('O' * line_v).ljust(width, ' ')
         line.reverse! if to_the_right?(k)
-        line
+        colored ? line.colorize(color) : line
       }.join('')
+      line_no += 1
     end
     lines.reverse.join("\n")
   end
 
   private
+
+  def colors
+    %i(red green light_red magenta white blue yellow)
+  end
 
   def keyline(keys, width)
     keys.map {|key|
