@@ -12,8 +12,13 @@ class Scores
     end
     @time = time if time < @time
   end
+
   def to_s
     buckets.to_s
+  end
+
+  def date_s
+    time.strftime('%b %y').downcase
   end
 
   private
