@@ -3,10 +3,13 @@ class ScoreChart
     @buckets = buckets
   end
 
-  def render(width: 3)
+  def render(width: 3, with_empties: false)
     lines = []
+
     remaining = @buckets.dup
-    keys = @buckets.keys
+    strip_empties(remaining) unless with_empties
+
+    keys = remaining.keys
     
     lines << keyline(keys, width)
 
@@ -26,6 +29,18 @@ class ScoreChart
     keys.map {|key|
       key.first.to_s.ljust(width, ' ')
     }.join ''
+  end
+
+  def strip_empties(buckets)
+    strip_leading_empties buckets, buckets.keys
+    strip_leading_empties buckets, buckets.keys.reverse
+  end
+
+  def strip_leading_empties(buckets, keys)
+    keys.each {|k|
+      break unless buckets[k] == 0
+      buckets.delete k
+    }
   end
 
 end
