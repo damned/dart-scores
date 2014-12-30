@@ -16,6 +16,7 @@ class ScoreChart
     lines << keyline(keys, width)
 
     line_no = 0
+    dot = colored ? '¶' : 'O'
 
     while remaining.values.inject(:+) > 0 do
       lines << remaining.map {|k, v| 
@@ -23,9 +24,9 @@ class ScoreChart
         color = colors[rawci % colors.size]
         line_v = [v, width].min
         remaining[k] = v - line_v
-        line = ('O' * line_v).ljust(width, ' ')
+        line = (dot * line_v).ljust(width, ' ')
         line.reverse! if to_the_right?(k)
-        colored ? line.colorize(color) : line
+        colored ? line.colorize(color).colorize(background: :white) : line
       }.join('')
       line_no += 1
     end
@@ -35,7 +36,7 @@ class ScoreChart
   private
 
   def colors
-    %i(red green light_red magenta white blue yellow)
+    %i(red green black light_red magenta yellow blue)
   end
 
   def keyline(keys, width)
